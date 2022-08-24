@@ -2,16 +2,20 @@ package com.example.muskan;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 
 public class regiesteredComplaints extends AppCompatActivity {
@@ -23,34 +27,47 @@ public class regiesteredComplaints extends AppCompatActivity {
     FirebaseUser user;
     RecyclerView recyc;
     complaintAdapter adapter;
+    ArrayList<Datamodel> listComp;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regiestered_complaints);
         recyc = findViewById(R.id.idRVComplaints);
-        recyc.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        recyc.setLayoutManager(linearLayoutManager);
+        listComp= new ArrayList<>();
+
+        adapter= new complaintAdapter(this,listComp);
+        recyc.setAdapter(adapter);
 
         mauth = FirebaseAuth.getInstance();
         user = mauth.getCurrentUser();
         database = FirebaseDatabase.getInstance("https://muskan-cba1b-default-rtdb.firebaseio.com/");
+        ref=database.getReference().child("Users").child(user.getUid()).child("Complaints");
+     //   https://muskan-cba1b-default-rtdb.firebaseio.com/
 
 
-        FirebaseRecyclerOptions<model> options =
-                new FirebaseRecyclerOptions.Builder<model>()
-                        .setQuery(database.getReference("Users").child(user.getUid()).child("Complaints"), model.class)
-                        .build();
+        ref.addValueEventListener(new ValueEventListener() {
 
-        adapter = new complaintAdapter(options);
-        recyc.setAdapter(adapter);
-    }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        adapter.startListening();
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        adapter.stopListening();
-    }
-}
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot:snapshot.getChildren())
+                {
+                    Datamodel datamodel= dataSnapshot.getValue(Datamodel.class);
+                    listComp.add(datamodel);
+                }
+                adapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+}}

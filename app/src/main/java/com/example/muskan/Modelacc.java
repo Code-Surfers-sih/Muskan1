@@ -2,13 +2,14 @@ package com.example.muskan;
 
 import com.google.firebase.database.PropertyName;
 
-public class model{
-    String name,age,sort,image;
-    long complaintID;
-    public model() {
+public class Modelacc {
+    private String name,age,sort,image;
+    private long complaintID;
+    public Modelacc() {
     }
 
-    public model(String name, String age, String sort, String image, Long complaintID) {
+
+    public Modelacc(String name, String age, String sort, String image, Long complaintID) {
         this.name = name;
         this.age = age;
         this.sort = sort;
