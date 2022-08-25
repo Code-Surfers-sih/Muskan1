@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Muskan</string>
+    <string name="phone_number">Phone Number</string>
+
+    <string-array name="type">
+        <item>Hazardous</item>
+        <item>Non Hazardous</item>
+    </string-array>
+</resources>

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "764665893472",
+    "firebase_url": "https://muskan-cba1b-default-rtdb.firebaseio.com",
+    "project_id": "muskan-cba1b",
+    "storage_bucket": "muskan-cba1b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764665893472:android:084f76aab7e04ae7606905",
+        "android_client_info": {
+          "package_name": "com.example.muskan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "764665893472-5dq60cqbk1ogb1q24u7inu46fq93gpc3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChIwiTKBV6yQ4CK5uSK4CCT2C-zgZqrVA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764665893472-5dq60cqbk1ogb1q24u7inu46fq93gpc3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
