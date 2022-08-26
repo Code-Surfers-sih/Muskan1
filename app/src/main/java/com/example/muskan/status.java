@@ -33,30 +33,112 @@ public class status extends AppCompatActivity {
         TextView currentstatus=findViewById(R.id.dept);
         TextView aadharstatus=findViewById(R.id.aadharid);
         TextView ifsstatus=findViewById(R.id.ifsc);
-        TextView accountstatus=findViewById(R.id.udisecode);
-        TextView udisestatus=findViewById(R.id.accountno);
+        TextView accountstatus=findViewById(R.id.accountno);
+        TextView udisestatus=findViewById(R.id.udisecode);
         TextView admissionstatus=findViewById(R.id.admissionno);
         TextView classstatus=findViewById(R.id.classthird);
         TextView complaintid=findViewById(R.id.idStatus);
         TextView childnamestatus=findViewById(R.id.namestatus);
 
-        DatabaseReference nameref=(ref.child("UIDAI").child("Complaints").child(spid).child("name"));
-        DatabaseReference ageref=(ref.child("UIDAI").child("Complaints").child(spid).child("age"));
-        DatabaseReference sortref=(ref.child("Complaints").child(spid).child("sort")));
-        DatabaseReference edustatusref=(ref.child("Education").child("Complaints").child(spid).child("status"));
+        DatabaseReference compref=(ref.child("Complaints").child(spid));
+        DatabaseReference bankref=(ref.child("Bank").child("Complaints").child(spid));
+        DatabaseReference ageref=(ref.child("UIDAI").child("Complaints").child(spid));
+        DatabaseReference sortref=(ref.child("Complaints").child(spid));
+        DatabaseReference edustatusref=(ref.child("Education").child("Complaints").child(spid));
         DatabaseReference statuscompref=(ref.child("Complaints").child(spid).child("status"));
 
-        nameref.addValueEventListener(new ValueEventListener() {
+        compref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String namestat=snapshot.toString();
+                String compstat=String.valueOf(snapshot.child("complaintID").getValue());
+                complaintid.setText(compstat);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        })
+        });
+
+        sortref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String sortstat=String.valueOf(snapshot.child("sort").getValue());
+                sortstatus.setText(sortstat);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        ageref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String agestat=String.valueOf(snapshot.child("age").getValue());
+                agestatus.setText(agestat);
+                String namestat=String.valueOf(snapshot.child("name").getValue());
+                namestatus.setText(namestat);
+                childnamestatus.setText(namestat);
+                String aadharstat=String.valueOf(snapshot.child("aadhar").getValue());
+                aadharstatus.setText(aadharstat);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        bankref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String ifsstat=String.valueOf(snapshot.child("ifsc").getValue());
+                    ifsstatus.setText(ifsstat);
+
+                    String accountstat=String.valueOf(snapshot.child("accountno").getValue());
+                    accountstatus.setText(accountstat);
+
+                    String bank=String.valueOf(snapshot.child("status").getValue());
+                    String education=String.valueOf(snapshot.child("status").getValue());
+
+                if(bank.equals("1"))
+            currentstatus.setText("Bank");
+        else{
+            if(education.equals("1"))
+                currentstatus.setText("Education");
+            else
+                currentstatus.setText("UIDAI");
+        }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        edustatusref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String udisestat=String.valueOf(snapshot.child("udise").getValue());
+                udisestatus.setText(udisestat);
+
+                String admissionstat=String.valueOf(snapshot.child("admissionno").getValue());
+                admissionstatus.setText(admissionstat);
+
+                String classstat=String.valueOf(snapshot.child("grade").getValue());
+                classstatus.setText(classstat);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
 //        if(bank.equals("1"))
 //            currentstatus.setText("Bank");
@@ -67,12 +149,6 @@ public class status extends AppCompatActivity {
 //                currentstatus.setText("UIDAI");
 //        }
 
-        aadharstatus.setText(String.valueOf(ref.child("UIDAI").child("Complaints").child(spid).child("aadhar").get()));
-        ifsstatus.setText(String.valueOf(ref.child("Bank").child("Complaints").child(spid).child("ifsc").get()));
-        accountstatus.setText(String.valueOf(ref.child("Bank").child("Complaints").child(spid).child("account").get()));
-        udisestatus.setText(String.valueOf(ref.child("Bank").child("Complaints").child(spid).child("udise").get()));
-        admissionstatus.setText(String.valueOf(ref.child("Education").child("Complaints").child(spid).child("admission").get()));
-        classstatus.setText(String.valueOf(ref.child("Education").child("Complaints").child(spid).child("class").get()));
-        namestatus.setText(String.valueOf(ref.child("UIDAI").child("Complaints").child(spid).child("name").get()));
+
     }
 }

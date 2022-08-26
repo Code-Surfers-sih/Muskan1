@@ -73,14 +73,15 @@ public class complaint_register extends AppCompatActivity {
     private long complaintID;
     private int k;
     private FirebaseDatabase database;
-    private String tasklabel, name, age, uril, urilsec;
+    private String tasklabel, name, age, uril, urilsec,typelabel;
     private EditText nameedit, ageedit;
     private Spinner spinner;
+    private Spinner labourtype;
     private final int CAMERA_PICTURE_REQUEST_CODE = 20;
     private Uri filePath;
     private final int PICK_IMAGE_GALLERY_CODE = 78;
-    private ImageView imagePreviw;
-    private Button capture, continuebtn;
+    private ImageView imagePreviw, continuebtn;
+    private Button capture;
     private FirebaseAuth mauth;
     private FirebaseUser user;
     private LocationManager locationManager;
@@ -93,6 +94,7 @@ public class complaint_register extends AppCompatActivity {
 
 
     private String[] tasks = {"Hazardous", "Non-Hazardous"};
+    private String[] types={"Slave", "Trafficked child", "Debt bonded", "Forced labour"};
     private String Latitude;
     private String Longitude;
 
@@ -127,6 +129,23 @@ public class complaint_register extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 tasklabel = tasks[i];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        labourtype=findViewById(R.id.labourtype);
+        ArrayAdapter adapter1=new ArrayAdapter(this, android.R.layout.simple_spinner_item,types);
+
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        labourtype.setAdapter(adapter1);
+        labourtype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                typelabel=types[i];
             }
 
             @Override
@@ -318,7 +337,7 @@ public class complaint_register extends AppCompatActivity {
         database = FirebaseDatabase.getInstance("https://muskan-cba1b-default-rtdb.firebaseio.com");
         DatabaseReference ref=database.getReference();
 
-        complaintDataHolder complaint=new complaintDataHolder(uril,name,age,tasklabel,complaintID,Latitude,Longitude);
+        complaintDataHolder complaint=new complaintDataHolder(uril.toString(),name.toString(),age.toString(),tasklabel.toString(),complaintID,Latitude.toString(),Longitude.toString(),typelabel.toString());
         ref.child("Users").child(user.getUid()).child("Complaints").child(String.valueOf(complaintID)).setValue(complaint);
         ref.child("Complaints").child(String.valueOf(complaintID)).setValue(complaint);
         ref.child("Complaints").child(String.valueOf(complaintID)).child("image").setValue(urilsec);

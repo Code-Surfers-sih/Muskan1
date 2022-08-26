@@ -26,6 +26,9 @@
         android:theme="@style/Theme.Muskan"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".choice"
+            android:exported="false" />
+        <activity
             android:name=".status"
             android:exported="false" />
         <activity
