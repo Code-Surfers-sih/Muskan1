@@ -75,7 +75,7 @@ public class login_screen extends AppCompatActivity {
                        if(task.isSuccessful()){
                            Toast.makeText(login_screen.this, "Login successful...", Toast.LENGTH_SHORT).show();
                            FirebaseUser user=mauth.getCurrentUser();
-                           Intent intent=new Intent(login_screen.this, complaint_register.class);
+                           Intent intent=new Intent(login_screen.this, choice.class);
                            startActivity(intent);
 
 
