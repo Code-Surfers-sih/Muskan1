@@ -43,8 +43,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -80,8 +83,8 @@ public class complaint_register extends AppCompatActivity {
     private final int CAMERA_PICTURE_REQUEST_CODE = 20;
     private Uri filePath;
     private final int PICK_IMAGE_GALLERY_CODE = 78;
-    private ImageView imagePreviw, continuebtn;
-    private Button capture;
+    private ImageView imagePreviw;
+    private Button capture,continuebtn;
     private FirebaseAuth mauth;
     private FirebaseUser user;
     private LocationManager locationManager;
@@ -117,7 +120,7 @@ public class complaint_register extends AppCompatActivity {
         editor.putLong("COMPLAINT_ID", complaintID);
         editor.apply();
 
-        spinner = findViewById(R.id.spinner);
+        spinner = findViewById(R.id.spinnerregi);
         ArrayAdapter adapter = new ArrayAdapter(this
                 , android.R.layout.simple_spinner_item, tasks);
 
@@ -137,7 +140,7 @@ public class complaint_register extends AppCompatActivity {
             }
         });
 
-        labourtype=findViewById(R.id.labourtype);
+        labourtype=findViewById(R.id.labourtyperegi);
         ArrayAdapter adapter1=new ArrayAdapter(this, android.R.layout.simple_spinner_item,types);
 
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -155,16 +158,16 @@ public class complaint_register extends AppCompatActivity {
         });
 
 
-        nameedit = findViewById(R.id.nameedit1);
-        ageedit = findViewById(R.id.ageedit1);
+        nameedit = findViewById(R.id.nameedit1regi);
+        ageedit = findViewById(R.id.ageedit1regi);
 
         imagePreviw = findViewById(R.id.imagepreview);
         database = FirebaseDatabase.getInstance("https://muskan-cba1b-default-rtdb.firebaseio.com");
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance("gs://muskan-cba1b.appspot.com");
         databaseReference = database.getReference();
         storageReference = firebaseStorage.getReference();
-        capture = findViewById(R.id.capture);
-        continuebtn = findViewById(R.id.continueButton);
+        capture = findViewById(R.id.captureregi);
+        continuebtn = findViewById(R.id.continueButtonregi);
         ActivityCompat.requestPermissions(complaint_register.this,new String[]
                 {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
 
@@ -307,7 +310,7 @@ public class complaint_register extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
                             uril=uri.toString();
 
-                            databaseReference.child("Users").child(user.getUid()).child("Complaints").child(String.valueOf(complaintID)).child("image").setValue(uri.toString());
+                            databaseReference.child("Users").child(user.getUid()).child("Complaints");
                             databaseReference.child("Complaints").child(String.valueOf(complaintID)).child("image").setValue(uri.toString());
                             Toast.makeText(complaint_register.this, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);
@@ -336,9 +339,9 @@ public class complaint_register extends AppCompatActivity {
         user= mauth.getCurrentUser();
         database = FirebaseDatabase.getInstance("https://muskan-cba1b-default-rtdb.firebaseio.com");
         DatabaseReference ref=database.getReference();
-
-        complaintDataHolder complaint=new complaintDataHolder(uril.toString(),name.toString(),age.toString(),tasklabel.toString(),complaintID,Latitude.toString(),Longitude.toString(),typelabel.toString());
-        ref.child("Users").child(user.getUid()).child("Complaints").child(String.valueOf(complaintID)).setValue(complaint);
+        complaintDataHolder complaint=new complaintDataHolder(uril,name,age,tasklabel,complaintID,Latitude,Longitude);
+        DatabaseReference refcomp=ref.child("Users").child(user.getUid()).child("Complaints").child(String.valueOf(complaintID));
+        ref.child("Users").child(user.getUid()).child("Complaints").child(String.valueOf(complaintID)).child("typeofwork").setValue(typelabel);
         ref.child("Complaints").child(String.valueOf(complaintID)).setValue(complaint);
         ref.child("Complaints").child(String.valueOf(complaintID)).child("image").setValue(urilsec);
         ref.child("Complaints").child(String.valueOf(complaintID)).child("uid").setValue((user.getUid()));
@@ -387,7 +390,7 @@ public class complaint_register extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == CAMERA_PERMISSION_REQUEST_CODE && grantResults[1] ==PackageManager.PERMISSION_GRANTED){
+        if(requestCode == CAMERA_PERMISSION_REQUEST_CODE && grantResults[0] ==PackageManager.PERMISSION_GRANTED){
             openCamera();
         }
     }
@@ -424,6 +427,7 @@ public class complaint_register extends AppCompatActivity {
 
             }
         } else if(requestCode == CAMERA_PICTURE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            assert data != null;
             Bundle extras = data.getExtras();
             Bitmap bitmap  = (Bitmap)extras.get("data");
             imagePreviw.setImageBitmap(bitmap);

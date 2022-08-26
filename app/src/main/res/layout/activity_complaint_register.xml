@@ -48,7 +48,7 @@
         android:layout_marginTop="40dp"/>
 
     <EditText
-        android:id="@+id/nameedit1"
+        android:id="@+id/nameedit1regi"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -63,7 +63,7 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:background="@drawable/line"
-        app:layout_constraintTop_toBottomOf="@id/nameedit1"
+        app:layout_constraintTop_toBottomOf="@id/nameedit1regi"
         android:layout_marginLeft="25dp"
         app:layout_constraintLeft_toLeftOf="parent"
         />
@@ -79,7 +79,7 @@
         android:layout_marginTop="40dp"/>
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/spinnerregi"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/typeofwork"
@@ -92,7 +92,7 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:background="@drawable/line"
-        app:layout_constraintTop_toBottomOf="@id/spinner"
+        app:layout_constraintTop_toBottomOf="@id/spinnerregi"
         android:layout_marginLeft="25dp"
         app:layout_constraintLeft_toLeftOf="parent"
         />
@@ -108,7 +108,7 @@
         android:layout_marginTop="40dp"/>
 
     <EditText
-        android:id="@+id/ageedit1"
+        android:id="@+id/ageedit1regi"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
@@ -122,7 +122,7 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:background="@drawable/line"
-        app:layout_constraintTop_toBottomOf="@id/ageedit1"
+        app:layout_constraintTop_toBottomOf="@id/ageedit1regi"
         android:layout_marginLeft="25dp"
         app:layout_constraintLeft_toLeftOf="parent"
         />
@@ -150,7 +150,7 @@
         />
 
     <Spinner
-        android:id="@+id/labourtype"
+        android:id="@+id/labourtyperegi"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/line4"
@@ -163,14 +163,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/image"
-        app:layout_constraintTop_toBottomOf="@+id/labourtype"
+        app:layout_constraintTop_toBottomOf="@+id/labourtyperegi"
         android:layout_marginLeft="22dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="40dp"/>
 
 
     <Button
-        android:id="@+id/capture"
+        android:id="@+id/captureregi"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         app:layout_constraintTop_toBottomOf="@id/image"
@@ -182,17 +182,17 @@
 
 
 
-    <ImageView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/continuebtn"
-        app:layout_constraintTop_toBottomOf="@+id/capture"
+        app:layout_constraintTop_toBottomOf="@+id/captureregi"
         android:layout_marginTop="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="35dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:id="@+id/continueButton"/>
+        android:id="@+id/continueButtonregi"/>
 
 
     <ImageView
@@ -200,10 +200,10 @@
         android:layout_width="47dp"
         android:layout_height="46dp"
         android:layout_marginTop="71dp"
-        android:layout_marginBottom="43dp"
-        app:layout_constraintBottom_toTopOf="@+id/continueButton"
+
+        app:layout_constraintBottom_toTopOf="@+id/continueButtonregi"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/capture"
+        app:layout_constraintStart_toEndOf="@+id/captureregi"
         app:layout_constraintTop_toBottomOf="@+id/ageedit1"
         tools:srcCompat="@tools:sample/avatars" />
 

@@ -3,12 +3,12 @@ package com.example.muskan;
 public class complaintDataHolder {
     private String image,name, age,sort;
     private long complaintID;
-    private String latititude,longitude,typelabel;
+    private String latititude,longitude;
 
     public complaintDataHolder() {
     }
 
-    public complaintDataHolder(String image, String name, String age, String sort, long complaintID, String latititude, String longitude, String typelabel) {
+    public complaintDataHolder(String image, String name, String age, String sort, long complaintID, String latititude, String longitude) {
         this.image = image;
         this.name = name;
         this.age = age;
@@ -16,7 +16,7 @@ public class complaintDataHolder {
         this.complaintID = complaintID;
         this.latititude = latititude;
         this.longitude = longitude;
-        this.typelabel = typelabel;
+
     }
 
     public String getImage() {
@@ -63,13 +63,6 @@ public class complaintDataHolder {
         return latititude;
     }
 
-    public String getTypelabel() {
-        return typelabel;
-    }
-
-    public void setTypelabel(String typelabel) {
-        this.typelabel = typelabel;
-    }
 
     public void setLatititude(String latititude) {
         this.latititude = latititude;
