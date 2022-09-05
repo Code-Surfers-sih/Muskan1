@@ -180,7 +180,16 @@
         android:backgroundTint="#F85F6A"
         android:text="Capture"/>
 
-
+    <Button
+        android:id="@+id/record"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toBottomOf="@id/image"
+        app:layout_constraintLeft_toRightOf="@id/captureregi"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#F85F6A"
+        android:text="Panic"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -191,6 +200,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="35dp"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:text="Continue"
         app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/continueButtonregi"/>
 
@@ -203,8 +213,8 @@
 
         app:layout_constraintBottom_toTopOf="@+id/continueButtonregi"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/captureregi"
-        app:layout_constraintTop_toBottomOf="@+id/ageedit1"
+        app:layout_constraintStart_toEndOf="@+id/record"
+        app:layout_constraintTop_toBottomOf="@+id/ageedit1regi"
         tools:srcCompat="@tools:sample/avatars" />
 
 

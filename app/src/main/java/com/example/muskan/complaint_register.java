@@ -3,6 +3,8 @@ package com.example.muskan;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,9 +14,11 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.speech.RecognizerIntent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,12 +33,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -42,15 +51,17 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
-public class complaint_register extends AppCompatActivity {
+public class complaint_register<record> extends AppCompatActivity {
 
 
+    private static final int VOICE_REQUEST=52;
     private static  final int REQUEST_LOCATION=11;
     private long complaintID;
     private int k;
     private FirebaseDatabase database;
-    private String tasklabel, name, age, uril, urilsec,typelabel;
+    private String tasklabel, name, age, uril, urilsec,typelabel,urilfirst;
     private EditText nameedit, ageedit;
     private Spinner spinner;
     private Spinner labourtype;
@@ -58,7 +69,7 @@ public class complaint_register extends AppCompatActivity {
     private Uri filePath;
     private final int PICK_IMAGE_GALLERY_CODE = 78;
     private ImageView imagePreviw;
-    private Button capture,continuebtn;
+    private Button capture,continuebtn,record;
     private FirebaseAuth mauth;
     private FirebaseUser user;
     private LocationManager locationManager;
@@ -74,6 +85,7 @@ public class complaint_register extends AppCompatActivity {
     private String[] types={"Slave", "Trafficked child", "Debt bonded", "Forced labour"};
     private String Latitude;
     private String Longitude;
+    Member member;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +147,7 @@ public class complaint_register extends AppCompatActivity {
         nameedit = findViewById(R.id.nameedit1regi);
         ageedit = findViewById(R.id.ageedit1regi);
 
+        record=findViewById(R.id.record);
         imagePreviw = findViewById(R.id.imagepreview);
         database = FirebaseDatabase.getInstance("https://muskan-cba1b-default-rtdb.firebaseio.com");
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance("gs://muskan-cba1b.appspot.com");
@@ -145,18 +158,30 @@ public class complaint_register extends AppCompatActivity {
         ActivityCompat.requestPermissions(complaint_register.this,new String[]
                 {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
 
+        record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseDatabase database=FirebaseDatabase.getInstance("https://muskan-cba1b-default-rtdb.firebaseio.com/");
+                DatabaseReference ref=database.getReference().child("Complaints");
+                ref.child("panic").setValue("1");
+
+            }
+
+            });
+
+
+
+
+
         continuebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                locationManager=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-                {
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     //Write Function To enable gps
 
                     OnGPS();
-                }
-                else
-                {
+                } else {
                     //GPS is already On then
 
                     getLocation();
@@ -164,9 +189,39 @@ public class complaint_register extends AppCompatActivity {
                 uploadImage();
                 getLocation();
                 dataInFirebase();
+                database = FirebaseDatabase.getInstance("https://muskan-cba1b-default-rtdb.firebaseio.com");
+                DatabaseReference ref=database.getReference();
+
+
+                DatabaseReference refcomp=ref.child("Users").child(user.getUid());
+                refcomp.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        notification();
+                    }
 
 
 
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
 
 //                Intent intent=new Intent(complaint_register.this,regiesteredComplaints.class);
@@ -174,7 +229,6 @@ public class complaint_register extends AppCompatActivity {
 
             }
         });
-
 
 
         capture.setOnClickListener(new View.OnClickListener() {
@@ -283,9 +337,10 @@ public class complaint_register extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             uril=uri.toString();
-
-                            databaseReference.child("Users").child(user.getUid()).child("Complaints");
+                            urilfirst=uri.toString();
+                            databaseReference.child("Users").child(user.getUid()).child("Complaints").child(String.valueOf(complaintID)).child("image").setValue(uri.toString());
                             databaseReference.child("Complaints").child(String.valueOf(complaintID)).child("image").setValue(uri.toString());
+
                             Toast.makeText(complaint_register.this, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);
 
@@ -306,19 +361,24 @@ public class complaint_register extends AppCompatActivity {
 
 
     private void dataInFirebase() {
-
+        String imgurl=uril;
         name=nameedit.getText().toString();
         age=ageedit.getText().toString();
         mauth=FirebaseAuth.getInstance();
         user= mauth.getCurrentUser();
         database = FirebaseDatabase.getInstance("https://muskan-cba1b-default-rtdb.firebaseio.com");
         DatabaseReference ref=database.getReference();
-        complaintDataHolder complaint=new complaintDataHolder(uril,name,age,tasklabel,complaintID,Latitude,Longitude);
+        complaintDataHolder complaint=new complaintDataHolder(name,age,tasklabel,complaintID,Latitude,Longitude);
+
         DatabaseReference refcomp=ref.child("Users").child(user.getUid()).child("Complaints").child(String.valueOf(complaintID));
-        ref.child("Users").child(user.getUid()).child("Complaints").child(String.valueOf(complaintID)).child("typeofwork").setValue(typelabel);
+        refcomp.setValue(complaint);
+        refcomp.child("image").setValue(uril);
+
+         ref.child("Users").child(user.getUid()).child("Complaints").child(String.valueOf(complaintID)).child("typeofwork").setValue(typelabel);
         ref.child("Complaints").child(String.valueOf(complaintID)).setValue(complaint);
         ref.child("Complaints").child(String.valueOf(complaintID)).child("image").setValue(urilsec);
         ref.child("Complaints").child(String.valueOf(complaintID)).child("uid").setValue((user.getUid()));
+
     }
 
     private void showImageSelectedDialog(){
@@ -389,6 +449,12 @@ public class complaint_register extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == VOICE_REQUEST && resultCode == RESULT_OK) {
+            List<String> results = data.getStringArrayListExtra(
+                    RecognizerIntent.EXTRA_RESULTS);
+            String spokenText = results.get(0);
+        }
+
         if(requestCode  ==  PICK_IMAGE_GALLERY_CODE && resultCode == Activity.RESULT_OK) {
             if(data == null || data.getData() == null)
                 return;
@@ -416,5 +482,24 @@ public class complaint_register extends AppCompatActivity {
         String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "title", null);
         return Uri.parse(path);
     }
+
+    private void notification() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel=new NotificationChannel("n","n", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager= getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+
+        }
+
+
+        NotificationCompat.Builder builder=new NotificationCompat.Builder(this,"n").setContentText("Muskan")
+                .setSmallIcon(R.id.logo)
+                .setAutoCancel(true)
+                .setContentText("New Complaint is registered");
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+        managerCompat.notify(999,builder.build());
+    }
+
+
 }
 

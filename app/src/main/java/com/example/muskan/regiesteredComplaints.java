@@ -39,8 +39,7 @@ public class regiesteredComplaints extends AppCompatActivity {
         recyc.setLayoutManager(linearLayoutManager);
         listComp= new ArrayList<>();
 
-        adapter= new complaintAdapter(this,listComp);
-        recyc.setAdapter(adapter);
+
 
         mauth = FirebaseAuth.getInstance();
         user = mauth.getCurrentUser();
@@ -67,6 +66,8 @@ public class regiesteredComplaints extends AppCompatActivity {
 
             }
         });
+        adapter= new complaintAdapter(this,listComp);
+        recyc.setAdapter(adapter);
 
 
 

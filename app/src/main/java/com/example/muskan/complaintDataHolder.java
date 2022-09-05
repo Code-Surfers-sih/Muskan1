@@ -8,8 +8,8 @@ public class complaintDataHolder {
     public complaintDataHolder() {
     }
 
-    public complaintDataHolder(String image, String name, String age, String sort, long complaintID, String latititude, String longitude) {
-        this.image = image;
+    public complaintDataHolder(String name, String age, String sort, long complaintID, String latititude, String longitude) {
+
         this.name = name;
         this.age = age;
         this.sort = sort;
@@ -17,14 +17,6 @@ public class complaintDataHolder {
         this.latititude = latititude;
         this.longitude = longitude;
 
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public String getName() {

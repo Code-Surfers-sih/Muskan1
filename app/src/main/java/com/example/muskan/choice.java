@@ -28,16 +28,18 @@ public class choice extends AppCompatActivity {
         Button registeredbtnchoice=findViewById(R.id.registeredbtnchoice);
         Button acceptedbtnchoice=findViewById(R.id.acceptedbtnchoice);
 
-        TextView tobechanged=findViewById(R.id.tobechanged);
+        TextView Tobechanged=findViewById(R.id.tobechanged);
         FirebaseDatabase database=FirebaseDatabase.getInstance("https://muskan-cba1b-default-rtdb.firebaseio.com/");
-        DatabaseReference ref=database.getReference();
+        DatabaseReference ref=database.getReference("Users");
         FirebaseAuth mauth= FirebaseAuth.getInstance();
         FirebaseUser user=mauth.getCurrentUser();
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 assert user != null;
-                String tobechanged=String.valueOf(snapshot.child("Users").child(user.getUid()).child("Complaints").child("username").getValue());
+                String tobechanged=String.valueOf(snapshot.child(user.getUid()).child("username").getValue());
+                Tobechanged.setText(tobechanged);
             }
 
             @Override
